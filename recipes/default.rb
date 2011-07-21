@@ -20,10 +20,15 @@
 
 Chef::Log.info("Chef Handlers will be at: #{node['chef_handler']['handler_path']}")
 
+root_group = value_for_platform(
+  ["openbsd", "freebsd", "mac_os_x"] => { "default" => "wheel" },
+  "default" => "root"
+)
+
 remote_directory node['chef_handler']['handler_path'] do
   source 'handlers'
   owner 'root'
-  group 'root'
+  group root_group
   mode "0755"
   recursive true
   action :nothing
